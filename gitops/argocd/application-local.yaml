@@ -6,14 +6,13 @@ metadata:
   labels:
     app.kubernetes.io/name: nginx-gitops-app
     app.kubernetes.io/component: argocd-application
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com//azure-aks-demo.git
+    # Temporary local path - will be updated to GitHub repo URL
+    repoURL: https://github.com/example/azure-aks-demo.git
     targetRevision: HEAD
     path: gitops/k8s-manifests
   destination:
@@ -29,7 +28,6 @@ spec:
     - PrunePropagationPolicy=foreground
     - PruneLast=true
     - ApplyOutOfSyncOnly=true
-    - ServerSideApply=true
     retry:
       limit: 5
       backoff:
@@ -44,5 +42,3 @@ spec:
     value: DevOps Team
   - name: Environment
     value: Production
-  - name: Repository
-    value: azure-aks-demo
