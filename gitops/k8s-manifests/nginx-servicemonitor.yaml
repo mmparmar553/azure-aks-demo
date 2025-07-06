@@ -14,9 +14,9 @@ spec:
   selector:
     matchLabels:
       app: nginx
-      version: v1
+      app.kubernetes.io/name: nginx-metrics
   endpoints:
-  - port: http
+  - port: metrics
     path: /metrics
     interval: 30s
     scrapeTimeout: 10s
