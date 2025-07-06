@@ -1,0 +1,162 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: nginx-app
+  labels:
+    app: nginx
+    version: v1
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/component: config
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Azure AKS Demo - GitOps Deployment</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+                color: white;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .container {
+                text-align: center;
+                padding: 3rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                backdrop-filter: blur(15px);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                max-width: 800px;
+            }
+            h1 {
+                font-size: 3.5rem;
+                margin-bottom: 1rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+            .subtitle {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin: 2rem 0;
+            }
+            .feature {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 1.5rem;
+                border-radius: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition: transform 0.3s ease;
+            }
+            .feature:hover {
+                transform: translateY(-5px);
+            }
+            .feature h3 {
+                margin-top: 0;
+                font-size: 1.3rem;
+            }
+            .status-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin: 2rem 0;
+            }
+            .status-item {
+                background: rgba(0, 255, 0, 0.2);
+                padding: 1rem;
+                border-radius: 10px;
+                border: 1px solid rgba(0, 255, 0, 0.3);
+            }
+            .version {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+            .info-section {
+                margin-top: 2rem;
+                padding: 1rem;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 Azure AKS Demo</h1>
+            <p class="subtitle">GitOps Deployment with ArgoCD</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>☁️ Azure AKS</h3>
+                    <p>Private Kubernetes cluster with 3 nodes</p>
+                </div>
+                <div class="feature">
+                    <h3>🔒 Istio Service Mesh</h3>
+                    <p>mTLS encryption and traffic management</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Full Observability</h3>
+                    <p>Prometheus, Grafana, Kiali, Jaeger</p>
+                </div>
+                <div class="feature">
+                    <h3>🔄 GitOps</h3>
+                    <p>ArgoCD automated deployments</p>
+                </div>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-item">
+                    <strong>Nginx:</strong> 4.236.207.28 ✅
+                </div>
+                <div class="status-item">
+                    <strong>Grafana:</strong> 74.179.240.75 ✅
+                </div>
+                <div class="status-item">
+                    <strong>ArgoCD:</strong> 40.121.190.173 ✅
+                </div>
+                <div class="status-item">
+                    <strong>Jaeger:</strong> 20.242.224.198 ✅
+                </div>
+                <div class="status-item">
+                    <strong>Prometheus:</strong> 40.71.212.7:9090 ✅
+                </div>
+                <div class="status-item">
+                    <strong>Kiali:</strong> 40.71.212.7:20001 ✅
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <p><strong>Pod:</strong> <span id="hostname">Loading...</span></p>
+                <p><strong>Deployed:</strong> <span id="timestamp"></span></p>
+                <p><strong>Managed by:</strong> ArgoCD GitOps</p>
+            </div>
+        </div>
+        
+        <div class="version">v1.3.0 - GitOps</div>
+        
+        <script>
+            document.getElementById('timestamp').textContent = new Date().toLocaleString();
+            document.getElementById('hostname').textContent = window.location.hostname || 'nginx-pod';
+        </script>
+    </body>
+    </html>

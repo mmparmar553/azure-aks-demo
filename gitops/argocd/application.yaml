@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-gitops-app
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: nginx-gitops-app
+    app.kubernetes.io/component: argocd-application
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/azure-aks-demo.git
+    targetRevision: HEAD
+    path: gitops/k8s-manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - ApplyOutOfSyncOnly=true
+    - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
+  info:
+  - name: Description
+    value: Azure AKS Demo - Nginx application with GitOps deployment
+  - name: Owner
+    value: DevOps Team
+  - name: Environment
+    value: Production
+  - name: Repository
+    value: azure-aks-demo

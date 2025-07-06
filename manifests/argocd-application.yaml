@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-demo-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-repo/nginx-demo
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nginx-demo-project
+  namespace: argocd
+spec:
+  description: Nginx Demo Project
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: nginx-demo
+    server: https://kubernetes.default.svc
+  - namespace: istio-system
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: networking.istio.io
+    kind: Gateway
+  - group: networking.istio.io
+    kind: VirtualService
+  - group: security.istio.io
+    kind: PeerAuthentication
+  - group: security.istio.io
+    kind: AuthorizationPolicy
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: apps
+    kind: Deployment
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  roles:
+  - name: admin
+    description: Admin role for nginx-demo project
+    policies:
+    - p, proj:nginx-demo-project:admin, applications, *, nginx-demo-project/*, allow
+    - p, proj:nginx-demo-project:admin, repositories, *, *, allow
+    groups:
+    - nginx-demo:admin
