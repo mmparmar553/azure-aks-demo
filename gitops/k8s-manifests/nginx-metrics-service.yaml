@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-metrics
+  namespace: nginx-app
+  labels:
+    app: nginx
+    version: v1
+    app.kubernetes.io/name: nginx-metrics
+    app.kubernetes.io/component: metrics
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9113"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9113
+    targetPort: 9113
+    protocol: TCP
+    name: metrics
+  selector:
+    app: nginx
+    version: v1
