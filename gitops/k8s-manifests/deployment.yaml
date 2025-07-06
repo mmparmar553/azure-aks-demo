@@ -46,7 +46,7 @@ spec:
       - name: nginx
         image: nginx:1.25-alpine
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: http
           protocol: TCP
         env:
@@ -98,7 +98,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
@@ -106,7 +106,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
           timeoutSeconds: 3
@@ -114,7 +114,7 @@ spec:
         startupProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 10
           periodSeconds: 5
           timeoutSeconds: 3
@@ -122,7 +122,7 @@ spec:
       - name: nginx-exporter
         image: nginx/nginx-prometheus-exporter:0.11.0
         args:
-        - -nginx.scrape-uri=http://localhost:80/nginx_status
+        - -nginx.scrape-uri=http://localhost:8080/nginx_status
         ports:
         - containerPort: 9113
           name: metrics
