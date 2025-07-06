@@ -13,7 +13,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com//azure-aks-demo.git
+    repoURL: https://github.com/mmparmar553/azure-aks-demo.git
     targetRevision: HEAD
     path: gitops/k8s-manifests
   destination:
