@@ -1,0 +1,47 @@
+apiVersion: install.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: nginx-tracing
+  namespace: nginx-app
+  labels:
+    app.kubernetes.io/name: nginx-tracing
+    app.kubernetes.io/component: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  tracing:
+  - providers:
+      name: jaeger
+  - customTags:
+      nginx_version:
+        literal:
+          value: "1.25-alpine"
+      app_name:
+        literal:
+          value: "nginx-gitops"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-sampling-config
+  namespace: nginx-app
+  labels:
+    app.kubernetes.io/name: jaeger-config
+    app.kubernetes.io/component: tracing
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+data:
+  sampling.json: |
+    {
+      "service_strategies": [
+        {
+          "service": "nginx.*",
+          "type": "probabilistic",
+          "param": 1.0
+        }
+      ],
+      "default_strategy": {
+        "type": "probabilistic",
+        "param": 0.1
+      }
+    }

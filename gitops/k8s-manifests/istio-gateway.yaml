@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: nginx-gateway
+  namespace: nginx-app
+  labels:
+    app.kubernetes.io/name: nginx-gateway
+    app.kubernetes.io/component: networking
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx-virtualservice
+  namespace: nginx-app
+  labels:
+    app.kubernetes.io/name: nginx-virtualservice
+    app.kubernetes.io/component: networking
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - nginx-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: nginx-service.nginx-app.svc.cluster.local
+        port:
+          number: 80
+    headers:
+      request:
+        add:
+          x-trace-id: "%REQ(x-request-id)%"
+      response:
+        add:
+          x-trace-source: "istio-gateway"
