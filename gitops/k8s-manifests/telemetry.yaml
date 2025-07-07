@@ -1,4 +1,4 @@
-apiVersion: install.istio.io/v1alpha1
+apiVersion: telemetry.istio.io/v1alpha1
 kind: Telemetry
 metadata:
   name: nginx-tracing
@@ -10,8 +10,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   tracing:
-  - providers:
-      name: jaeger
   - customTags:
       nginx_version:
         literal:
