@@ -186,8 +186,8 @@ data:
     </head>
     <body>
         <div class="container">
-            <h1>🚀 Azure AKS Demo</h1>
-            <p class="subtitle">GitOps Deployment with ArgoCD</p>
+            <h1>🎉 Manmohan..its working....WOWOWOWOWOW</h1>
+            <p class="subtitle">GitOps Magic in Action! 🚀✨</p>
             
             <div class="features">
                 <div class="feature">
@@ -236,7 +236,7 @@ data:
             </div>
         </div>
         
-        <div class="version">v1.3.0 - GitOps</div>
+        <div class="version">v1.4.0 - Manmohan Edition! 🎊</div>
         
         <script>
             document.getElementById('timestamp').textContent = new Date().toLocaleString();
